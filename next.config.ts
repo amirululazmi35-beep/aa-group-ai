@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Disable Turbopack for production builds (Netlify edge function compatibility)
+  experimental: {},
 };
 
 export default nextConfig;
