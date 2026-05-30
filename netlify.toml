@@ -7,4 +7,3 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NEXT_DISABLE_NETLIFY_EDGE = "true"
