@@ -56,9 +56,9 @@ export async function GET(request: Request) {
 
     let list;
     if (conditions.length > 0) {
-      list = await query.where(and(...conditions)).all();
+      list = await query.where(and(...conditions));
     } else {
-      list = await query.all();
+      list = await query;
     }
 
     return NextResponse.json({ products: list });
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
       updatedAt: now,
     });
 
-    const newProd = await db.select().from(products).where(eq(products.id, productId)).get();
+    const newProd = await db.select().from(products).where(eq(products.id, productId)).limit(1).then(r => r[0]);
 
     return NextResponse.json({ success: true, product: newProd });
   } catch (error) {

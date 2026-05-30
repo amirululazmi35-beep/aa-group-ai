@@ -17,7 +17,7 @@ export async function PUT(
     const { id: categoryId } = await params;
     const { name, description, isActive } = await request.json();
 
-    const existing = await db.select().from(categories).where(eq(categories.id, categoryId)).get();
+    const existing = await db.select().from(categories).where(eq(categories.id, categoryId)).limit(1).then(r => r[0]);
     if (!existing) {
       return NextResponse.json({ error: 'Kategori tidak dijumpai.' }, { status: 404 });
     }
@@ -34,7 +34,7 @@ export async function PUT(
       })
       .where(eq(categories.id, categoryId));
 
-    const updated = await db.select().from(categories).where(eq(categories.id, categoryId)).get();
+    const updated = await db.select().from(categories).where(eq(categories.id, categoryId)).limit(1).then(r => r[0]);
 
     return NextResponse.json({ success: true, category: updated });
   } catch (error) {

@@ -16,15 +16,13 @@ export async function GET() {
       list = await db
         .select()
         .from(supportTickets)
-        .orderBy(desc(supportTickets.createdAt))
-        .all();
+        .orderBy(desc(supportTickets.createdAt));
     } else {
       list = await db
         .select()
         .from(supportTickets)
         .where(eq(supportTickets.userId, user.id))
-        .orderBy(desc(supportTickets.createdAt))
-        .all();
+        .orderBy(desc(supportTickets.createdAt));
     }
 
     return NextResponse.json({ tickets: list });
@@ -67,7 +65,7 @@ export async function POST(request: Request) {
       updatedAt: now,
     });
 
-    const newTicket = await db.select().from(supportTickets).where(eq(supportTickets.id, ticketId)).get();
+    const newTicket = await db.select().from(supportTickets).where(eq(supportTickets.id, ticketId)).limit(1).then(r => r[0]);
 
     return NextResponse.json({ success: true, ticket: newTicket });
   } catch (error) {

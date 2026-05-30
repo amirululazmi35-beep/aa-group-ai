@@ -46,3 +46,6 @@ sqlite.db
 
 # uploads
 /public/uploads
+
+# Local Netlify folder
+.netlify

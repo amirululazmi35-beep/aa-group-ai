@@ -21,7 +21,8 @@ export async function POST(request: Request) {
       .select()
       .from(users)
       .where(eq(users.email, email.toLowerCase()))
-      .get();
+      .limit(1)
+      .then(r => r[0]);
 
     if (!user) {
       return NextResponse.json(

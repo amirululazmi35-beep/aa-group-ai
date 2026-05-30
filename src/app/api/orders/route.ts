@@ -17,16 +17,14 @@ export async function GET() {
       list = await db
         .select()
         .from(orders)
-        .orderBy(desc(orders.createdAt))
-        .all();
+        .orderBy(desc(orders.createdAt));
     } else {
       // Customer hanya melihat orders sendiri
       list = await db
         .select()
         .from(orders)
         .where(eq(orders.userId, user.id))
-        .orderBy(desc(orders.createdAt))
-        .all();
+        .orderBy(desc(orders.createdAt));
     }
 
     // Ambil order items untuk setiap order
@@ -43,8 +41,7 @@ export async function GET() {
         })
         .from(orderItems)
         .innerJoin(products, eq(orderItems.productId, products.id))
-        .where(eq(orderItems.orderId, order.id))
-        .all();
+        .where(eq(orderItems.orderId, order.id));
 
       ordersWithItems.push({
         ...order,

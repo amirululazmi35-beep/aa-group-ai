@@ -15,15 +15,13 @@ export async function GET() {
     const categoriesList = await db
       .select()
       .from(categories)
-      .orderBy(desc(categories.createdAt))
-      .all();
+      .orderBy(desc(categories.createdAt));
 
     // 2. Ambil Semua Produk
     const productsList = await db
       .select()
       .from(products)
-      .orderBy(desc(products.createdAt))
-      .all();
+      .orderBy(desc(products.createdAt));
 
     // 3. Ambil Semua Pelanggan
     const customersList = await db
@@ -36,15 +34,13 @@ export async function GET() {
       })
       .from(users)
       .where(eq(users.role, 'customer'))
-      .orderBy(desc(users.createdAt))
-      .all();
+      .orderBy(desc(users.createdAt));
 
     // 4. Ambil Semua Pesanan beserta item
     const allOrders = await db
       .select()
       .from(orders)
-      .orderBy(desc(orders.createdAt))
-      .all();
+      .orderBy(desc(orders.createdAt));
 
     const ordersList = [];
     for (const order of allOrders) {
@@ -59,15 +55,15 @@ export async function GET() {
         })
         .from(orderItems)
         .innerJoin(products, eq(orderItems.productId, products.id))
-        .where(eq(orderItems.orderId, order.id))
-        .all();
+        .where(eq(orderItems.orderId, order.id));
 
       // Dapatkan nama pelanggan
       const customer = await db
         .select({ name: users.name, email: users.email })
         .from(users)
         .where(eq(users.id, order.userId))
-        .get();
+        .limit(1)
+        .then(r => r[0]);
 
       ordersList.push({
         ...order,
@@ -95,8 +91,7 @@ export async function GET() {
       .from(serviceRequests)
       .innerJoin(products, eq(serviceRequests.productId, products.id))
       .innerJoin(users, eq(serviceRequests.userId, users.id))
-      .orderBy(desc(serviceRequests.createdAt))
-      .all();
+      .orderBy(desc(serviceRequests.createdAt));
 
     // 6. Ambil Tiket Bantuan
     const ticketsList = await db
@@ -111,8 +106,7 @@ export async function GET() {
       })
       .from(supportTickets)
       .innerJoin(users, eq(supportTickets.userId, users.id))
-      .orderBy(desc(supportTickets.createdAt))
-      .all();
+      .orderBy(desc(supportTickets.createdAt));
 
     // Kira stats ringkas
     const totalEarnings = ordersList

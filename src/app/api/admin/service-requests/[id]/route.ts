@@ -26,7 +26,8 @@ export async function PUT(
       .select()
       .from(serviceRequests)
       .where(eq(serviceRequests.id, serviceId))
-      .get();
+      .limit(1)
+      .then(r => r[0]);
 
     if (!existing) {
       return NextResponse.json({ error: 'Permintaan servis tidak ditemui.' }, { status: 404 });

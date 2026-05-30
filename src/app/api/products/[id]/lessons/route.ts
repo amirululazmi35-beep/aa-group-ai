@@ -16,8 +16,7 @@ export async function GET(
       .select()
       .from(videoLessons)
       .where(eq(videoLessons.productId, productId))
-      .orderBy(videoLessons.sortOrder)
-      .all();
+      .orderBy(videoLessons.sortOrder);
 
     // Semak jika user logged in dan telah membeli course ini
     const user = await getSession();
@@ -37,7 +36,8 @@ export async function GET(
               eq(digitalAccess.accessStatus, 'active')
             )
           )
-          .get();
+          .limit(1)
+          .then(r => r[0]);
         if (accessRecord) hasAccess = true;
       }
     }

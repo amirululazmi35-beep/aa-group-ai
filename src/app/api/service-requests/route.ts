@@ -27,8 +27,7 @@ export async function GET() {
           updatedAt: serviceRequests.updatedAt,
         })
         .from(serviceRequests)
-        .innerJoin(products, eq(serviceRequests.productId, products.id))
-        .all();
+        .innerJoin(products, eq(serviceRequests.productId, products.id));
     } else {
       list = await db
         .select({
@@ -45,8 +44,7 @@ export async function GET() {
         })
         .from(serviceRequests)
         .innerJoin(products, eq(serviceRequests.productId, products.id))
-        .where(eq(serviceRequests.userId, user.id))
-        .all();
+        .where(eq(serviceRequests.userId, user.id));
     }
 
     return NextResponse.json({ requests: list });
@@ -79,7 +77,8 @@ export async function POST(request: Request) {
       .select()
       .from(serviceRequests)
       .where(and(eq(serviceRequests.orderId, orderId), eq(serviceRequests.userId, user.id)))
-      .get();
+      .limit(1)
+      .then(r => r[0]);
 
     if (existing) {
       await db

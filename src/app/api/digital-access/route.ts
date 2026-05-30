@@ -27,8 +27,7 @@ export async function GET() {
           createdAt: digitalAccess.createdAt,
         })
         .from(digitalAccess)
-        .innerJoin(products, eq(digitalAccess.productId, products.id))
-        .all();
+        .innerJoin(products, eq(digitalAccess.productId, products.id));
     } else {
       list = await db
         .select({
@@ -50,8 +49,7 @@ export async function GET() {
             eq(digitalAccess.userId, user.id),
             eq(digitalAccess.accessStatus, 'active')
           )
-        )
-        .all();
+        );
     }
 
     return NextResponse.json({ accesses: list });

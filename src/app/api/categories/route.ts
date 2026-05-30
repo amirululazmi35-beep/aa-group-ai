@@ -9,8 +9,7 @@ export async function GET() {
     const list = await db
       .select()
       .from(categories)
-      .where(eq(categories.isActive, true))
-      .all();
+      .where(eq(categories.isActive, true));
     return NextResponse.json({ categories: list });
   } catch (error) {
     console.error('Ralat membaca kategori API:', error);
@@ -46,7 +45,7 @@ export async function POST(request: Request) {
       createdAt: Date.now(),
     });
 
-    const newCat = await db.select().from(categories).where(eq(categories.id, categoryId)).get();
+    const newCat = await db.select().from(categories).where(eq(categories.id, categoryId)).limit(1).then(r => r[0]);
 
     return NextResponse.json({ success: true, category: newCat });
   } catch (error) {

@@ -48,7 +48,8 @@ export async function getSession() {
       .from(sessions)
       .innerJoin(users, eq(sessions.userId, users.id))
       .where(eq(sessions.id, sessionId))
-      .get();
+      .limit(1)
+      .then(r => r[0]);
 
     if (!result) return null;
 

@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 
 export async function GET() {
   try {
-    const config = await db.select().from(settings).where(eq(settings.id, 'default-settings')).get();
+    const config = await db.select().from(settings).where(eq(settings.id, 'default-settings')).limit(1).then(r => r[0]);
     
     // Jika tiada settings, gunakan fallback
     const fallbackSettings = {
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       }
     });
 
-    const updated = await db.select().from(settings).where(eq(settings.id, 'default-settings')).get();
+    const updated = await db.select().from(settings).where(eq(settings.id, 'default-settings')).limit(1).then(r => r[0]);
 
     return NextResponse.json({ success: true, settings: updated });
   } catch (error) {

@@ -27,7 +27,8 @@ export async function PUT(
       .select()
       .from(orders)
       .where(eq(orders.id, orderId))
-      .get();
+      .limit(1)
+      .then(r => r[0]);
 
     if (!existingOrder) {
       return NextResponse.json({ error: 'Pesanan tidak dijumpai.' }, { status: 404 });
@@ -58,8 +59,7 @@ export async function PUT(
         })
         .from(orderItems)
         .innerJoin(products, eq(orderItems.productId, products.id))
-        .where(eq(orderItems.orderId, orderId))
-        .all();
+        .where(eq(orderItems.orderId, orderId));
 
       for (const item of items) {
         if (item.type === 'app' || item.type === 'video_course' || item.type === 'bundle') {
@@ -73,7 +73,8 @@ export async function PUT(
                 eq(digitalAccess.productId, item.productId)
               )
             )
-            .get();
+            .limit(1)
+            .then(r => r[0]);
 
           if (!existingAccess) {
             let licenseKey = null;
@@ -113,7 +114,8 @@ export async function PUT(
                 eq(serviceRequests.productId, item.productId)
               )
             )
-            .get();
+            .limit(1)
+            .then(r => r[0]);
 
           if (!existingService) {
             await db.insert(serviceRequests).values({

@@ -32,7 +32,7 @@ export async function PUT(
     } = body;
 
     // Pastikan produk wujud
-    const existing = await db.select().from(products).where(eq(products.id, productId)).get();
+    const existing = await db.select().from(products).where(eq(products.id, productId)).limit(1).then(r => r[0]);
     if (!existing) {
       return NextResponse.json({ error: 'Produk tidak dijumpai.' }, { status: 404 });
     }
@@ -58,7 +58,7 @@ export async function PUT(
       })
       .where(eq(products.id, productId));
 
-    const updated = await db.select().from(products).where(eq(products.id, productId)).get();
+    const updated = await db.select().from(products).where(eq(products.id, productId)).limit(1).then(r => r[0]);
 
     return NextResponse.json({ success: true, product: updated });
   } catch (error) {

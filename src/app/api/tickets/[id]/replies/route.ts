@@ -21,7 +21,8 @@ export async function GET(
         .select()
         .from(supportTickets)
         .where(and(eq(supportTickets.id, ticketId), eq(supportTickets.userId, user.id)))
-        .get();
+        .limit(1)
+        .then(r => r[0]);
       if (!ticket) {
         return NextResponse.json({ error: 'Akses dinafikan.' }, { status: 403 });
       }
@@ -41,8 +42,7 @@ export async function GET(
       .from(ticketReplies)
       .innerJoin(users, eq(ticketReplies.senderId, users.id))
       .where(eq(ticketReplies.ticketId, ticketId))
-      .orderBy(ticketReplies.createdAt)
-      .all();
+      .orderBy(ticketReplies.createdAt);
 
     return NextResponse.json({ replies });
   } catch (error) {
@@ -76,7 +76,8 @@ export async function POST(
         .select()
         .from(supportTickets)
         .where(and(eq(supportTickets.id, ticketId), eq(supportTickets.userId, user.id)))
-        .get();
+        .limit(1)
+        .then(r => r[0]);
       if (!ticket) {
         return NextResponse.json({ error: 'Akses dinafikan.' }, { status: 403 });
       }
